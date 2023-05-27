@@ -1,0 +1,458 @@
+//all the necessary adts of single linked list
+/*Traverse the list.
+ Check if the list is empty. 
+ Insert a node after a given data item
+ Insert a node before a given data item
+ Delete a node after a given data item
+ Delete a node before a given data item
+ Delete a node for the given key.
+ Search for an element in the linked list.
+ Sort the elements of the linked list
+ Print the elements of the linked list in the reverse order.
+ Reverse the nodes of the linked list.
+ Print n th node from the last of a linked list.
+ Delete the duplicate elements in a linked list.*/
+
+
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct node{
+   int data; 
+   struct node * next;
+}node;  
+
+node* create();//
+void traverse(node *);//
+int isempty(node *);
+void insert_afterdata(node *);//
+void insert_beforedata(node *);//
+int dlt_afterdata(node *);//
+int dlt_beforedata(node *);//
+void insert_at_beg_end(node *);
+int dlt_at_beg_end(node *);//
+int dlt_at_key(node *);//
+int search_data(node *);//
+void sort_linkedlist(node *);//
+void print_reverse(node *);//
+node* reverse_list(node *);//
+void print_nth_from_last(node *);//
+void dlt_duplicate(node *);
+
+int main(){
+    node* start=NULL;
+    int ch,n,t;
+    do{
+        printf("\n1. Create List\n");
+        printf("2. Check if the list is empty.\n");
+        printf("3. Traverse the list.\n");
+        printf("4. Insert a node after a given data item\n");
+        printf("5. Insert a node before a given data item\n");
+        printf("6. Delete a node after a given data item\n");
+        printf("7. Delete a node before a given data item\n");
+        printf("8. Delete a node for the given key.\n");
+        printf("9. Search for an element in the linked list.\n");
+        printf("10. Sort the elements of the linked list\n");
+        printf("11. Print the elements of the linked list in the reverse order.\n");
+        printf("12. Reverse the nodes of the linked list.\n");
+        printf("13. Print n th node from the last of a linked list.\n");
+        printf("14. Delete the duplicate elements in a linked list.\n");
+    printf("\nEnter your choice:");
+    scanf("%d",&ch);
+
+        switch(ch){
+            case 1: start=create();
+            break;
+
+            case 2: t=isempty(start);
+                    if(t)
+                        printf("Not empty\n");
+                    else    
+                        printf("Empty\n");
+            break;
+
+            case 3: traverse(start);
+            break;
+            
+            case 4: insert_afterdata(start);
+            break;
+            
+            case 5: insert_beforedata(start);
+            break;
+            
+            case 6: t=dlt_afterdata(start);
+                    if(t!=-1)
+                        printf("The deleted data after given node is %d\n",t);
+            break;
+            
+            case 7: t=dlt_beforedata(start);
+                    if(t!=-1)
+                        printf("The deleted data before given node is %d\n",t);
+            break;
+
+            case 8: int t=dlt_at_key(start);
+                    if(t==-2)
+                        start=start->next;
+                    if(t!=-1)
+                        printf("The deleted data on the key is: %d\n",t);
+            break;
+
+            case 9: t=search_data(start);
+                    if(t!=-1)
+                        printf("The data found at node: %d\n",t);
+            break;
+
+            case 10: sort_linkedlist(start);
+            break;
+
+            case 11: print_reverse(start);
+            break;
+
+            case 12: reverse_list(start);
+            break; 
+            
+            case 13: print_nth_from_last(start);
+            break;
+
+            case 14: dlt_duplicate(start);
+            break;
+            
+        }
+        printf("\nPress 1 to continue||0 to exit:");
+        scanf("%d",&n);
+        
+    }while(n!=0);
+
+
+   return 0;
+}
+
+node* create(){
+    node* temp=NULL;
+    node* start=NULL;
+    int n;
+    printf("Enter the number of nodes to be created: ");//creating n number of nodes
+    scanf("%d",&n);
+
+    for(int i=0;i<n;i++){
+
+        struct node *n=(struct node *)malloc(sizeof(struct node *));//creating single node 
+        printf("Enter the value of node %d: ",i+1);
+        scanf("%d",&n->data);
+        n->next=NULL;
+        
+        if(start==NULL){
+            start=temp=n;       //attaching node at first position
+
+        }
+        else{
+            temp->next=n;   //attaching node after nodes
+            temp=n;
+        }
+    }
+    return start;       //returning the starting address of the created nodes
+
+}
+
+void traverse(node* start){
+    node* temp=start;
+    while(start!=NULL){
+        printf("->%d",start->data);
+        start=start->next;
+    }
+        printf("\n");
+}
+int isempty(node * start){
+
+    if(start!=NULL)
+        return 1;
+    else
+        return 0;
+}
+
+void insert_afterdata(node* start){
+    
+    int val;
+    printf("Enter the node value after which data to be inserted: ");
+    scanf("%d",&val);
+    
+    node* temp=start;
+    
+    while(temp->data!=val)      //traversing to find the given data
+    temp=temp->next;
+    if(temp==NULL){
+        printf("data not found!!");
+        exit;
+    }
+    else{
+        struct node *n=(struct node *)malloc(sizeof(struct node *));//creating  node 
+        printf("Enter the value of node: ");
+        scanf("%d",&n->data);
+        n->next=NULL;
+        temp->next=n;
+        temp=n;
+    }
+}
+
+void insert_beforedata(node* start){
+    
+    int val;
+    printf("Enter the node value before which data to be inserted: ");
+    scanf("%d",&val);
+    
+    node* temp=start,*t1=start;
+    while(temp->data!=val){         //traversing to find the given data
+        t1=temp;
+        temp=temp->next;
+    }
+    if(temp==NULL){
+        printf("data not found!!");
+        exit;
+    }
+    else{
+        struct node *n=(struct node *)malloc(sizeof(struct node *));//creating  node 
+        printf("Enter the value of node: ");
+        scanf("%d",&n->data);
+        n->next=temp;
+        t1->next=n;
+    }
+    
+}
+int dlt_afterdata(node* start){
+    
+    int val;
+    printf("Enter the node value after which data to be deleted: ");
+    scanf("%d",&val);
+    
+    node * temp=start,*f;
+    while(temp->data!=val)
+    temp=temp->next;
+    
+    if(temp->next==NULL){
+        printf("Cannot delete as last node is the value\n");
+        return -1;
+    }
+    
+    else if(temp==NULL){
+        printf("Value is not available\n");
+        return -1;
+    }
+    
+    else{
+        f=temp->next;
+        temp->next=temp->next->next;
+    }
+    
+    int x=-1;
+    x=f->data;
+    free(f);
+    return x;
+    
+}
+
+int dlt_beforedata(node* start){
+    
+    int val;
+    printf("Enter the node value after which data to be deleted: ");
+    scanf("%d",&val);
+    
+    if(isempty(start)){
+        printf("NO Item found!!\n");
+        return -1;               //this need to go in every function
+    }
+    node* temp=start,*t1,*t2;
+    t1=t2=start;
+    while(temp->data!=val){
+        t1=t2;
+        t2=temp;
+        temp=temp->next;
+    }
+    if(temp==NULL){  
+        printf("NO value found\n");           //if value not found    
+        return -1;
+    }
+    else if(start->data==val){ 
+        printf("first data is value cannot delete node befor start\n");
+        return -1;
+    }
+    else{
+        t1->next=temp;
+        int x=t2->data;
+        free(t2);
+        return x;
+    }
+}
+
+int dlt_at_key(node * start){
+    
+    
+    if(start!=NULL){
+        
+        int key;
+        printf("Enter the node number to be deleted: ");
+        scanf("%d",&key); //key is node number
+        
+        node* temp=start,*t1=start;
+        int x=-1,i=1;
+        
+        if(key==1){
+            printf("The deleted data on the key is: %d\n",temp->data);
+            return -2;
+        }
+        
+        while(i<key){
+            t1=temp;
+            temp=temp->next;
+            i++;
+        }
+        t1->next=temp->next;
+        x=temp->data;
+        free(temp);
+        
+    return x;
+    }
+    
+    else{
+        printf("The list is empty!!");
+        return -1;
+    }
+    
+}
+int search_data(node* start){
+    
+    if(isempty(start)){  
+        int val, count=1;
+        printf("Enter the node value to be searched: ");
+        scanf("%d",&val);
+        node* temp=start;
+        while(temp->data!=val){
+            temp=temp->next;
+            count++;
+        }
+        if(temp!=NULL)
+            return count;
+        else {
+            printf("key not found!!\n");
+            return -1;
+        }
+    }
+    else{
+        printf("The list is empty\n");
+        return -1;
+
+    }
+}
+
+node*
+reverse_list (node * start)
+{
+  
+      node *t1 = start, *prev = NULL, *t2;
+      while (t1 != NULL)
+	{
+	  t2 = t1->next;
+	  t1->next = prev;
+	  prev = t1;
+	  t1 = t2;
+	}
+      start = prev;
+      return start;
+}
+
+void print_reverse (node * start)
+{
+  if (isempty (start))
+    {
+      node *temp =reverse_list (start);
+      
+      while (temp != NULL)
+	{
+	  printf ("->%d", temp->data);
+	  temp = temp->next;
+	}
+    }
+  else
+    {
+      printf ("The list is empty!!\n");
+    }
+}
+
+void
+print_nth_from_last (node *start)
+{
+  if (isempty (start)){
+      
+      node *temp = start;
+      int k = 0,n;
+      printf("Enter the node position from last to be printed: ");
+      scanf("%d",&n);
+      while (temp != NULL)
+	{
+	  k++;
+	  temp = temp->next;
+	}
+	temp=start;
+      k = k - n;
+      while (k--)
+	{
+	  temp = temp->next;
+	}
+      printf ("The %dth data from last is: %d\n", n, temp->data);
+    }
+  else
+    {
+      printf ("The list is empty!!\n");
+    }
+
+}
+
+void sort_linkedlist(node* start){
+    if(isempty(start)==1){
+        node* temp=start,*t1;  
+        while(temp!=NULL){
+            t1=temp->next;
+            while(t1!=NULL){
+
+                if(temp->data>t1->data){
+                    
+                    int x=temp->data;
+                    temp->data=t1->data;
+                    t1->data=x;
+                }
+                t1=t1->next;
+            }
+            temp=temp->next;
+
+        }
+        
+    }
+    else{
+        printf("The list is empty\n");
+        return ;
+    }
+}
+void 
+dlt_duplicate (node * start)
+{
+    if(start!=NULL||start->next!=NULL){
+        sort_linkedlist(start);
+        struct node *temp = start;
+        while(temp->next!=NULL){
+            if(temp->data==temp->next->data){
+                node* dlt=temp->next;
+                temp->next=dlt->next;
+                free(dlt);
+            }
+            else{
+                temp=temp->next;
+            }
+        }
+    }
+    else{
+        printf("The list is empty or contains only one element!!\n");
+        return ;
+    }
+    
+  
+  
+}
