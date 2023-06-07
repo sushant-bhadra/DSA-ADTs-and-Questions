@@ -1,0 +1,638 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+   int data;
+   struct node * next;
+}*start=NULL;
+
+/*
+1. Write a program to search an element in a single linked list, if found delete that node and
+insert that node at beginning. Otherwise display an appropriate message.    
+2. Write a program to find the middle node in a single linked list (without counting the
+number of nodes.)                                                           
+3. Write a program to reverse the first m elements of a linked list of n nodes. 
+4. Write a program to check whether a given linked list is sorted or not.       
+5. Given a linked list which is sorted, write a program to insert an element into the linked
+list in sorted way.                                                             
+6. Write a program to modify the linked list such that all even numbers appear before all the
+odd numbers in the modified linked list.                                        
+7. Write a program to check whether a singly linked list is a palindrome or not.  
+
+8. A linked list is said to contain a cycle if any node is visited more than once while
+traversing the list. Write a program to detect a cycle in a linked list.        
+9. Write a program to reverse only even position nodes in a singly linked list.  
+10. Write a program to swap kth node from beginning with kth node from end in a Linked
+List                                                                            
+11. Given a singly linked list, rotate the linked list counter-clockwise by k nodes. Where k is
+a given positive integer. For example, if the given linked list is 10->20->30->40->50->60
+and k is 4, the list should be modified to 50->60->10->20->30->40. Assume that k is
+smaller than the count of nodes in linked list.                                 
+12. Write a program to merge two sorted linked list.
+*/
+   
+//-2
+struct node* create(){
+    start=NULL;
+    struct node* temp=start;
+    int n;
+    printf("Enter the number of nodes to be created: ");//creating n number of nodes
+    scanf("%d",&n);
+
+    for(int i=0;i<n;i++){
+
+        struct node *n=(struct node *)malloc(sizeof(struct node *));//creating single node 
+        printf("Enter the value of node %d: ",i+1);
+        scanf("%d",&n->data);
+        n->next=NULL;
+        
+        if(start==NULL){
+            start=temp=n;       //attaching node at first position
+
+        }
+        else{
+            temp->next=n;   //attaching node after nodes
+            temp=n;
+        }
+    }
+    return start;       //returning the starting address of the created nodes
+
+}
+
+//-1
+int isempty(){
+
+    if(start!=NULL)
+        return 1;
+    else
+        return 0;
+}
+
+//0
+void traverse(struct node * start){
+    struct node* temp=start;
+    while(temp!=NULL){
+        printf("->%d",temp->data);
+        temp=temp->next;
+    }
+        printf("\n");
+}
+
+//1
+void dlt_insert(){
+    
+    struct node * temp=start,*t1,*t=start;
+    if(isempty()){
+        
+        printf("Enter the value to be deleted");
+        int key;
+        scanf("%d",&key);
+        
+        while(temp->data!=key){
+            t1=temp;
+            temp=temp->next;
+        }
+        
+        if(temp==NULL)
+        {
+            printf("The given data is not found: ");
+            return ;
+        }
+        
+        t1->next=temp->next;
+        temp->next=t;
+        start=temp;
+        
+    }
+    else{
+        
+        printf("The list is empty\n");
+        return ;
+    }
+}
+
+//2
+int find_middle(){
+    
+    struct node *temp=start, *t1=start;
+    
+    if(isempty()){
+        
+        while(temp!=NULL && temp->next!=NULL){
+            temp=temp->next->next;
+            t1=t1->next;
+        }
+        return t1->data;
+    }
+    else{
+        printf("The list is empty\n");
+        return -1;
+    }
+}
+
+//3
+void reverse_nth_node(){
+    if(isempty()){
+        
+        struct node * temp=start,*prev=NULL,*ahead=start,*t1=start;
+        int m=0,n,x;
+        printf("Enter the number of nodes to be reversed: ");
+        scanf("%d",&n);
+        
+        while(temp!=NULL)
+        {
+            if(m==n)
+            x=temp->data;
+            m++;
+            temp=temp->next;
+        }
+        
+        temp=start;
+        if(n<=m){
+            
+            while(ahead->data!=x){
+                
+                ahead=temp->next;
+                temp->next=prev;
+                prev=temp;
+                temp=ahead;
+                
+            }
+            start=prev;
+            t1->next=ahead;
+            
+        }{
+            
+            printf("The given nodes exceedes nodes in the List!!\n");
+            return ;
+        }
+        
+        
+    }
+    else{
+        
+        printf("The list is empty\n");
+        return ;
+    }
+}
+
+//4
+int check_sorted(){
+    
+    struct node* temp=start;
+    if(isempty()){
+        
+    while(temp->next!=NULL){
+        if(temp->data>temp->next->data){
+            
+            return 0;
+        }
+        temp=temp->next;
+    }
+    return 1;
+    }
+    else{
+        printf("The list is empty!!\n");
+        return -1;
+    }
+}
+
+//5
+void insert_insorted(){
+    struct node *temp=start,*t1=start;
+    if(check_sorted(temp)){
+
+        
+        struct node * n=(struct node *)malloc(sizeof(struct node *));
+        printf("Enter the value to be inserted: ");
+        scanf("%d",&n->data);
+        n->next=NULL;
+
+        while(temp!=NULL && temp->data<n->data){
+            t1=temp;
+            temp=temp->next;
+        }
+
+        if(temp==NULL){
+            t1->next=n;
+            
+        }
+        else if(temp==start){
+            n->next=temp;
+            start=n;
+        }
+        else{
+            n->next=temp;
+            t1->next=n;
+        } 
+        
+
+    }
+    else{
+        printf("The list is not sorted!!\n");
+        return ;
+    }
+}
+
+//6
+void even_before_odd(){
+    if(isempty(start)){
+        
+        struct node* temp=start,*t1=start,*x=start;
+        
+        while(temp!=NULL){
+            if(temp->data%2==0){
+                t1->next=temp->next;
+                temp->next=x;
+                x=temp;
+                temp=t1->next;
+                
+            }
+            else{
+                t1=temp;
+                temp=temp->next;
+            }
+        }
+        start=x;
+    }
+    else{
+        printf("The list is empty!!\n");
+        return ;
+    }
+}
+
+//used up function
+struct node* reverse(struct node* start){
+    struct node* temp=start,*prev=NULL,*ahead;
+    
+    while(temp!=NULL){
+        ahead=temp->next;
+        temp->next=prev;
+        prev=temp;
+        temp=ahead;
+    }
+    start=prev;
+    return start;
+    
+}
+
+//7
+void is_palindrome(){
+    if(isempty(start)){
+        
+        struct node* temp=start;
+        struct node* rev_temp=NULL;
+        struct node* temp1=rev_temp;
+        
+        while(temp!=NULL){
+            struct node* n=(struct node*)malloc(sizeof(struct node*));
+            n->data=temp->data;
+            n->next=NULL;
+            if(rev_temp==NULL){
+                rev_temp=temp1=n;
+            }
+            else{
+                temp1->next=n;
+                temp1=n;
+            }
+            temp=temp->next;
+        }
+        
+        temp1=reverse(rev_temp);
+        temp=start;
+    
+        while(temp!=NULL){
+            
+            if(temp->data!=temp1->data){
+                printf("The list is not palindrome!!\n");
+                return ;
+            }
+            temp=temp->next;
+            temp1=temp1->next;
+        }
+        
+        printf("The list is palindrome!!\n");
+        return ;
+    }
+    else{
+        
+        printf("The list is empty!!\n");
+        return ;
+    }
+}
+
+//8
+int is_cycle(){
+    
+    if(isempty(start)){
+        
+        struct node* temp=start,*t1=start;
+        do{
+                temp=temp->next->next;
+                t1=t1->next;
+                
+        }while(temp!=NULL && temp->next!=NULL && t1!=temp);
+        
+        if(t1==temp)
+            return 1;
+        else{
+            printf("The list doesn't contains any cycle\n");
+            return -1;
+        }
+    }
+    else{
+        printf("THe list is empty!!\n");
+        return 0;
+    }
+}
+
+//9
+void reverse_even(){
+    if(isempty(start)){
+        
+        struct node * temp=start,*t1=start , *temphead;
+        temphead=(struct node * )malloc(sizeof(struct node *));
+        temphead->data=-1;
+        temphead->next=NULL;
+        
+        while(temp!=NULL){
+            t1=temp;
+            temp=temp->next;
+            if(temp==NULL)  break;
+            t1->next=temp->next;
+            struct node * temp1=temp;
+            temp=temp->next;
+            temp1->next=temphead;
+            temphead=temp1;
+        }
+        
+        temp=start;
+        struct node* temp2=temphead;
+        while(temp2->data!=-1){
+            t1=temp2;
+            temp2=temp2->next;
+            t1->next=temp->next;
+            temp->next=t1;
+            temp=temp->next->next;
+        }
+    }
+    else{
+        
+        printf("The list is empty!!\n");
+        return ;
+    }
+    
+    
+}
+
+//10
+void reverse_kth_first_last(){
+    
+    int count=0,k;
+    printf("Enter the number of nodes to be reversed: ");
+    scanf("%d",&k);
+    struct node * temp=start,*tail=start,*t1,*t2=start,*head=start,*temp1,*temp2;
+    
+    
+    while(temp!=NULL){
+        count++;
+        if(count==k){
+            t1=temp;
+            temp1=t1->next;
+        }
+        tail=temp;
+        temp=temp->next;
+    }
+    if(count>=2*k){
+    
+        for(int i=0;i<count-k;i++){
+            temp2=t2;
+            t2=t2->next;
+        }
+        
+        if(t1->next==t2){
+            tail->next=head;
+            t1->next=NULL;
+            start=t2;
+            
+        }
+        else{
+            
+            tail->next=temp1;
+            temp2->next=head;
+            t1->next=NULL;
+            start=t2;
+        }
+        return ;
+        
+    }
+    else{
+        printf("There are no sufficient nodes!!\n");
+        return ;
+    }
+}
+
+//11
+void reverse_counter_clock(){
+    struct node*temp=start,*head=start,*tail;
+    int count=0,k;
+    while(temp!=NULL){
+        count++;
+        tail=temp;
+        temp=temp->next;
+        
+    }
+    printf("Enter the number of nodes to be rotated: ");
+    scanf("%d",&k);
+    
+    if(count==k)    return ;
+    
+    else if(count>k){
+        
+        temp=start;
+        
+        for(int i=0;i<k-1;i++){
+            temp=temp->next;
+        }
+        
+        tail->next=head;
+        start=temp->next;
+        temp->next=NULL;
+        return ;
+    }
+    else{
+        printf("There are no sufficient nodes!!\n");
+        return ;
+    }
+}
+
+//used up functions
+struct node* create_merged(int * a,int n){
+    start=NULL;
+    struct node* temp=start;
+    
+    for(int i=0;i<n;i++){
+
+        struct node *n=(struct node *)malloc(sizeof(struct node *));//creating single node 
+        n->data=a[i];
+        n->next=NULL;
+        
+        if(start==NULL){
+            start=temp=n;       //attaching node at first position
+
+        }
+        else{
+            temp->next=n;   //attaching node after nodes
+            temp=n;
+        }
+    }
+    return start;       //returning the starting address of the created nodes
+
+}
+
+//12
+struct node* merge_sorted_list(){
+    struct node* head1=NULL,* head2=NULL;
+    head1=create();
+    head2=create();
+    struct node * res=NULL, *temp1=head1, *temp2=head2;
+    
+    int count=0;
+    while(temp1!=NULL){
+        count++;
+        temp1=temp1->next;
+    }
+    while(temp2!=NULL){
+        count++;
+        temp2=temp2->next;
+    }
+    
+    temp1=head1;
+    temp2=head2;
+    int arr[count],i=0;
+    
+    while(temp1!=NULL && temp2!=NULL){
+        
+        if(temp1->data>temp2->data){
+            
+            arr[i++]=temp2->data;
+            temp2=temp2->next;
+             
+        }
+        else if(temp1->data<temp2->data){
+            arr[i++]=temp1->data;
+            temp1=temp1->next;
+        }
+        else{
+            arr[i++]=temp1->data;
+            temp1=temp1->next;
+        }
+    }
+    
+    while(temp1!=NULL){
+        arr[i++]=temp1->data;
+        temp1=temp1->next;
+    }
+    while(temp2!=NULL){
+        arr[i++]=temp2->data;
+        temp2=temp2->next;
+    }
+    
+     res=create_merged(arr,count);
+     
+    return res;
+    
+}
+int main(){
+    
+    struct node* main_node=NULL;
+    
+        int ch,n,t;
+    do{
+        printf("\n-2. Create: \n");
+        printf("-1. isempty: \n");
+        printf("0. traverse: \n\n");
+        printf("Check the functions discriptions above:\n\n");
+        printf("1. \n");
+        printf("2. \n");
+        printf("3. \n");
+        printf("4. \n");
+        printf("5. \n");
+        printf("6. \n");
+        printf("7. \n");
+        printf("8. \n");
+        printf("9. \n");
+        printf("10. \n");
+        printf("11. \n");
+        printf("12. \n");
+    printf("\nEnter your choice:");
+    scanf("%d",&ch);
+
+        switch(ch){
+            case -2: create();
+            break;
+
+            case -1: t=isempty();
+                    if(t)
+                        printf("Not empty\n");
+                    else    
+                        printf("Empty\n");
+            break;
+
+            case 0: traverse(start);
+            break;
+            
+            case 1: dlt_insert();
+            break;
+            
+            case 2: t=find_middle();
+                    if(t!=-1)
+                        printf("The middle node data is: %d\n",t);
+            break;
+            
+            case 3: reverse_nth_node();
+            break;
+            
+            case 4: t=check_sorted();
+                    if(t)
+                        printf("The list is sorted!!\n");
+                    else        
+                        printf("The list is not sorted!!\n");
+            break;
+
+            case 5: insert_insorted();
+            break;
+
+            case 6: even_before_odd();
+            break;
+
+            case 7: is_palindrome();
+            break;
+            
+            case 8: t=is_cycle();
+                     if(t==1)
+                        printf("The list has a cycle\n");
+            break;
+            
+            case 9: reverse_even();
+            break;
+            
+            case 10: reverse_kth_first_last();
+            break;
+            
+            case 11: reverse_counter_clock();
+            break;
+            
+            case 12: merge_sorted_list();
+            break;
+            
+        }
+        printf("\nPress 1 to continue||0 to exit:");
+        scanf("%d",&n);
+        
+    }while(n==1);
+    
+    printf("\nThank you!!\n");
+    
+   return 0;
+}
