@@ -1,0 +1,254 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+   int data;
+   struct node * next;
+}*start=NULL;
+
+/*                                  Circular Linked-List ADTS
+1. Create the list            
+
+2. Traverse the list          
+
+3. Add a node at first node   
+
+4. Add a node at given key    
+
+5. Delete the first node      
+
+6. Delete at given key        
+
+7. Remove duplicates          
+
+8. Reverse the nodes            
+*/
+
+void create(){
+    int size;
+    printf("Enter the number of nodes to be created: ");
+    scanf("%d",&size);
+
+    struct node *temp=start;
+
+    for(int i=0;i<size;i++){
+        printf("Enter the value of node %d: ",i+1);
+        struct node* n=(struct node*) malloc(sizeof(struct node*));
+        scanf("%d",&n->data);
+        n->next=start;
+        
+        if(start==NULL){
+            start=temp=n;
+            n->next=start;
+        }
+        else{
+            temp->next=n;
+            temp=n;
+            n->next=start;
+        }
+    }
+}
+
+void traverse(){
+    struct node* temp=start;
+    
+    do{
+        printf("->%d",temp->data);
+        temp=temp->next;
+    }while(temp!=start);
+    printf("\n");
+}
+
+void insert_at_first(){
+    struct node * temp=start,*t1=start;
+    
+    printf("Enter the value of node to be inserted: ");
+    struct node *n=malloc(sizeof(struct node*));
+    scanf("%d",&n->data);
+    do{
+        t1=temp;
+        temp=temp->next;
+    }while(temp!=start);
+    
+    t1->next=n;
+    n->next=start;
+    start=n;
+    
+}
+
+void insert_at_key(){
+    struct node* temp=start->next,*t1=start;
+    
+    int key;
+    printf("Enter the key on which data to be inserted: ");
+    scanf("%d",&key);
+    
+    
+    int i=1;
+    if(key==i-1){
+        insert_at_first();
+        return ;
+    }
+    else{
+        struct node* n=malloc(sizeof(struct node*));
+        printf("Enter the value of node to be inserted: ");
+        scanf("%d",&n->data);
+        while(temp!=start && i<key){
+            t1=temp;
+            temp=temp->next;
+            i++;
+        }
+        n->next=temp;
+        t1->next=n;
+    }
+}
+
+int dlt_at_first(){
+    struct node* temp=start;
+    if(start==NULL)     return -1;
+    do{
+        temp=temp->next;
+    }while(temp->next!=start);
+    
+    int x=start->data;
+    start=start->next;
+    temp->next=start;
+    return x;
+}
+
+int dlt_at_key(){
+    int key,x=-1;
+    
+    printf("Enter the key to be deleted: ");
+    scanf("%d",&key);
+    
+    int i=1;
+    if(key==i-1){
+        x=dlt_at_first();
+        return x;
+    }
+    else{
+        struct node* temp=start->next,*t1=start;
+        while(temp!=start && i<key){
+            t1=temp;
+            temp=temp->next;
+            i++;
+        }
+        
+        if(temp==start){
+            printf("The key is not present in the list!!\n");
+            return -1;
+        }
+        else{
+            x=temp->data;
+            t1->next=t1->next->next;
+            free(temp);
+            return x;
+        }
+    } 
+}
+
+void remove_duplicates(){
+    
+    struct node* temp,*t1,*node=start;
+    
+    do{
+        t1=node;
+        temp=node->next;
+        
+        while(temp!=start){
+            if(temp->data == node->data){
+                t1->next=temp->next;
+                temp=temp->next;
+            }
+            else{
+                t1=temp;
+                temp=temp->next;
+            }
+        }
+        node=node->next;
+        
+    }while(node!=start);
+    
+    
+}
+
+void reverse_list(){
+    struct node * temp=start, *ahead, *prev=NULL;
+    
+    if(temp->next!=start){
+        do{
+            ahead=temp->next;
+            temp->next=prev;
+            prev=temp;
+            temp=ahead;
+        }while(temp!=start);
+        temp->next=prev;
+        start=prev;
+        
+    }
+    else{
+        return ;
+    }
+}
+
+int main(){
+
+    int ch,n,t;
+    
+    do{
+        
+        printf("\n1. Create: \n");
+        printf("2. Traverse: \n");
+        printf("3. Add at first:\n");
+        printf("4. Add at given key: \n");
+        printf("5. Delete the first node: \n");
+        printf("6. Delete at given key: \n");
+        printf("7. Remove duplicates: \n");
+        printf("8. Reverse the nodes: \n\n");
+        
+        printf("Enter your choice: ");
+        scanf("%d",&ch);
+        
+        switch(ch){
+            case 1: create();
+            break;
+            
+            case 2: traverse();
+            break;
+            
+            case 3: insert_at_first();
+            break;
+            
+            case 4: insert_at_key();
+            break;
+            
+            case 5: t=dlt_at_first();
+                    if(t!=-1)
+                        printf("The deleted item is: %d",t);
+            break;
+            
+            case 6: t=dlt_at_key();
+                    if(t!=-1)
+                        printf("The deleted item is: %d",t);
+            break;
+            
+            case 7: remove_duplicates();
+            break;
+            
+            case 8: reverse_list();
+            break;
+        }
+            
+            printf("\nPress 1 to continue || 0 to exit: ");
+            scanf("%d",&n);
+            
+            
+    }while(n==1);
+        
+   return 0;
+}
+
+
+
+
